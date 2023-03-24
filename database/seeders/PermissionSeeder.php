@@ -7,6 +7,27 @@ class PermissionSeeder {
     
     public function run(): void {
         
-//        DB::table('permission')->insert([]);
+        $resources = ['user', 'profile', 'permission'];
+        $rows = [];
+        
+        foreach($resources as $resource){
+            
+            $rows[] = [
+                'profile_id' => 1, 
+                'resource' => $resource, 
+                'actions' => ['C', 'R', 'U', 'D']
+            ];
+        }
+        
+        foreach($resources as $resource){
+            
+            $rows[] = [
+                'profile_id' => 2, 
+                'resource' => $resource, 
+                'actions' => ['R']
+            ];
+        }    
+        
+        DB::table('permission')->insert($rows);
     } 
 }
