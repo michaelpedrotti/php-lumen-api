@@ -1,85 +1,104 @@
-<?php
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse as Response;
+use App\Services\UserService as Service;
 
 
 class UserController extends Controller {
     
-    	/**
-     * 
-     *
-     * @return \Illuminate\Http\Response|Illuminate\Http\JsonResponse
-     */
-    public function index(Request $request, Response $response){
+    public function index(Request $req, Response $res): Response {
         
-        return 'index';
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request, Response $response){
-		
-	return 'create';
+        $json = ['error' => false ];
+        
+        try {
+            
+            $paginator = Service::newInstance()->paginate();
+            
+            $json['total'] = $paginator->total();
+            $json['rows'] = $paginator->items();
+        } 
+        catch (\Exception $e) {
+            
+            $json['message'] = $e->getMessage();
+            $json['trace'] = $e->getTraceAsString();
+            $json['error'] = true;
+        }
+        
+        return $res->setData($json);
     }
     
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request, Response $response) {
-		
-	return 'store';
-    }
-	
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Photo  $photo
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Request $request, Response $response) {
-		
-	return 'edit';
-    }	
-
-
-	
-	/**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Response $response) {
-		
-	return 'update';
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Photo  $photo
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, Response $response) {
+    public function create(Request $req, Response $res): Response {
         
-	return 'show';
+        return $res->setData([
+            
+            'error' => false,
+            'forms' => (object)[]
+        ]);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Photo  $photo
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, \Illuminate\Http\JsonResponse $response) {
+    
+    public function store(Request $req, Response $res): Response {
         
-	return 'destroy';
-    }	
+        $json = ['error' => false ];
+        
+        try {
+            
+            $json['data'] = Service::newInstance()->create($req->post());
+        } 
+        catch (\Exception $e) {
+            
+            $json['message'] = $e->getMessage();
+            $json['trace'] = $e->getTraceAsString();
+            $json['error'] = true;
+        }
+        
+        return $res->setData($json);
+        
+    }
+    
+    public function edit(Request $req, Response $res): Response {
+        
+        return $res->setData([
+            
+            'error' => false,
+            'forms' => (object)[],
+            'data' => Service::newInstance()->find($req->route('id'))
+        ]);
+    }
+    
+    public function update(Request $req, Response $res): Response {
+        
+        $json = ['error' => false ];
+        
+        try {
+            
+            $json['data'] = Service::newInstance()->update($req->post(), $req->route('id'));
+        } 
+        catch (\Exception $e) {
+            
+            $json['message'] = $e->getMessage();
+            $json['trace'] = $e->getTraceAsString();
+            $json['error'] = true;
+        }
+        
+        return $res->setData($json); 
+    }
+    
+    public function destroy(Request $req, \Illuminate\Http\JsonResponse $res): \Illuminate\Http\JsonResponse {
+        
+        $json = ['error' => false ];
+        
+        try {
+            
+            $json['data'] = Service::newInstance()->delete($req->route('id'));
+        } 
+        catch (\Exception $e) {
+            
+            $json['message'] = $e->getMessage();
+            $json['trace'] = $e->getTraceAsString();
+            $json['error'] = true;
+        }
+        
+        return $res->setData($json); 
+    }
 }

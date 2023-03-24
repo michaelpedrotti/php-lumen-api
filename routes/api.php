@@ -1,4 +1,4 @@
 <?php
 
-route_resource('profile', 'UserController');
+route_resource('profile', 'ProfileController');
 route_resource('user', 'UserController');

@@ -8,14 +8,15 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 
 $app = new Laravel\Lumen\Application( dirname(__DIR__) );
 
+$app->withFacades();
+$app->withEloquent();
+
 $app->singleton(Illuminate\Contracts\Debug\ExceptionHandler::class, App\Exceptions\Handler::class);
 
 $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::class);
 
-$app->withFacades();
-
+$app->configure('database');
 $app->configure('app');
-$app->withEloquent();
 
 $app->router->group(['namespace' => 'App\Http\Controllers'], function($router) {
     
