@@ -1,7 +1,8 @@
 <?php namespace App\Services;
 
-use App\Models\User as Model;
+use Illuminate\Support\Arr;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+use App\Models\Profile as Model;
 
 class UserService extends AbstractService {
     
@@ -27,6 +28,21 @@ class UserService extends AbstractService {
         $model->fill($data);
         $model->save();
         
+        if(Arr::has($data, 'permissions')) {
+            
+            $service = PermissionService::newInstance();
+            
+            foreach($data['permissions'] as $resource => $actions){
+                
+                $service->create([
+                    'resource' => $resource,
+                    'actions' => $actions,
+                    'profile_id' => $model->id
+                    
+                ]);
+            }
+        }
+        
         return $model;
     }
     
@@ -35,6 +51,14 @@ class UserService extends AbstractService {
         $model = $this->find($id);
         $model->fill($data);
         $model->save();
+        
+        if(Arr::has($data, 'permissions')) {
+            
+            $service = PermissionService::newInstance();
+            
+            
+            
+        }
         
         return $model;
     }
