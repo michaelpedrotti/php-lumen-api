@@ -17,7 +17,7 @@
 if(!function_exists('route_resource')){
     function route_resource(string $path = '', string $controller  = 'UserController'): void {
 
-        \Illuminate\Support\Facades\Route::group(['prefix' => '/' . $path], function(\Laravel\Lumen\Routing\Router $router) use($path, $controller) {
+        \Illuminate\Support\Facades\Route::group(['prefix' => '/' . $path, 'middleware' => 'auth'], function(\Laravel\Lumen\Routing\Router $router) use($path, $controller) {
     
             $router->get('/', ['uses' => $controller .'@index', 'as' => $path.'.index']);
             $router->get('/new', ['uses' => $controller .'@create', 'as' => $path.'.create']);

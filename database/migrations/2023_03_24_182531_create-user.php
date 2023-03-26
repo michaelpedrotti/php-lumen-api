@@ -11,9 +11,9 @@ return new class extends Migration {
         Schema::create('user', function (Blueprint $table) {
 
             $table->id();
-            $table->string('name', 255);
-            $table->string('email', 255);
-            $table->string('password', 100);
+            $table->string('name', 255)->notNullable();
+            $table->string('email', 255)->unique()->notNullable();
+            $table->string('password', 100)->notNullable();
             $table->integer('profile_id');
             
             $table->foreign('profile_id', 'pk_641decb8851b4')
