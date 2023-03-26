@@ -4,7 +4,7 @@ return [
 
     'default' => env('DB_DIALECT', 'mysql'),
     'connections' => [
-        'mysql' => [
+        "mysql" => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', 'dbhost'),
             'port' => env('DB_PORT', '3306'),

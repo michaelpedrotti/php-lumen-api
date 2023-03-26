@@ -24,6 +24,7 @@ $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::
 // Register Config Files
 //--------------------------------------------------------------------------
 $app->configure('database');
+$app->configure('jwt');
 $app->configure('app');
 
 //--------------------------------------------------------------------------
