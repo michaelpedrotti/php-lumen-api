@@ -20,7 +20,7 @@ abstract class AbstractService {
             }
             else {
                 
-                $query->where($name, null, $value);
+                $query->where($name, '=', $value);
             }
             
         }

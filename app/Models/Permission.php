@@ -8,5 +8,9 @@ class Permission extends Model {
 
     protected $fillable = ['profile_id', 'resource', 'actions'];
     
+    protected $casts = [
+        'actions' => 'array'
+    ];
+    
     public $timestamps = false;
 }

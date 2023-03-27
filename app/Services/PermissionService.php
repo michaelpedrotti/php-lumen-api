@@ -15,6 +15,10 @@ class PermissionService extends AbstractService {
         
         $query = $this->_filter($filter, Model::query());
         
+        print_r($query->getBindings());
+        print_r($query->toSql());
+       
+        
         return $query->get($columns)->all();
     }
     
@@ -35,11 +39,7 @@ class PermissionService extends AbstractService {
         $model->fill($data);
         $model->save();
         
-        if(Arr::has($data, 'permissions')) {
-            
-            
-        }
-        
+         
         return $model;
     }
     
