@@ -4,6 +4,26 @@ use Illuminate\Database\Eloquent\Builder;
 
 abstract class AbstractService {
     
+    
+    /**
+     * 
+     */
+    protected function _query($where = [], Builder $query): array {
+
+        foreach($where as $key => $val){
+            
+            if(is_numeric($key) && is_array($val) && count($val) == 3 && in_array($val[1], ['in', 'notIn'])){
+                
+                $query->{$val[1] == 'in' ? 'whereIn' : 'whereNotIn'}($val[0], $val[2]);
+                                
+                unset($where[$key]);   
+            }
+        }
+        
+        return [$where, $query];
+    }
+    
+    
     protected function _filter($filter = [], Builder $query): Builder {
         
         foreach($filter as $name => $value){
