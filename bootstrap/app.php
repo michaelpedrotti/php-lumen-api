@@ -25,6 +25,7 @@ $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::
 //--------------------------------------------------------------------------
 $app->configure('database');
 $app->configure('jwt');
+$app->configure('authz');
 $app->configure('app');
 
 //--------------------------------------------------------------------------

@@ -18,19 +18,61 @@ use Laravel\Lumen\Routing\Router;
  * 
  */
 if(!function_exists('route_resource')){
-    function route_resource(string $path = '', string $controller  = 'UserController'): void {
-        
-        $attributes = ['prefix' => '/' . $path, 'middleware' => ['is_authenticated', 'is_authorized']];
-        
-        Route::group($attributes, function(Router $router) use($path, $controller) {
     
-            $router->get('/', ['uses' => $controller .'@index', 'as' => $path.'.index']);
-            $router->get('/new', ['uses' => $controller .'@create', 'as' => $path.'.create']);
-            $router->post('/', ['uses' => $controller .'@store', 'as' => $path.'.store']);
-            $router->get('/{id:[\d]+}', ['uses' => $controller .'@show', 'as' => $path.'.show']);
-            $router->get('/{id:[\d]+}/edit', ['uses' => $controller .'@edit', 'as' => $path.'.edit']);
-            $router->put('/{id:[\d]+}', ['uses' => $controller .'@update', 'as' => $path.'.update']);
-            $router->delete('/{id:[\d]+}', ['uses' => $controller .'@destroy', 'as' => $path.'.destroy']);
+    function route_resource(string $resource = '', string $controller  = 'UserController'): void {
+        
+        $attributes = [
+            'prefix' => '/' . $resource, 
+            'middleware' => ['is_authenticated', 'is_authorized']
+        ];
+        
+         
+        Route::group($attributes, function(Router $router) use($resource, $controller) {
+ 
+            $concat = ['_resource' => $resource];
+            
+            $router->get('/', [
+                'uses' => $controller .'@index', 
+                'as' => $resource.'.index', 
+                ...$concat, 
+                '_action' => 'read'
+            ])
+            ->get('/new', [
+                'uses' => $controller .'@create', 
+                'as' => $resource.'.create',
+                ...$concat, 
+                '_action' => 'create'
+            ])
+            ->post('/', [
+                'uses' => $controller .'@store', 
+                'as' => $resource.'.store',
+                ...$concat, 
+                '_action' => 'create'
+            ])
+            ->get('/{id:[\d]+}', [
+                'uses' => $controller .'@show', 
+                'as' => $resource.'.show',
+                ...$concat, 
+                '_action' => 'read'
+            ])
+            ->get('/{id:[\d]+}/edit', [
+                'uses' => $controller .'@edit', 
+                'as' => $resource.'.edit',
+                ...$concat,
+                '_action' => 'update'
+            ])
+            ->put('/{id:[\d]+}', [
+                'uses' => $controller .'@update', 
+                'as' => $resource.'.update',
+                ...$concat, 
+                '_action' => 'update'
+            ])
+            ->delete('/{id:[\d]+}', [
+                'uses' => $controller .'@destroy', 
+                'as' => $resource.'.destroy',
+                ...$concat, 
+                '_action' => 'delete'
+            ]);
         });
     }
 }

@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  * 
  * @link https://jwt-auth.readthedocs.io/en/develop/lumen-installation/
+ * @link https://blog.renatolucena.net/post/laravel-crie-uma-api-autenticada-jwt-com-lumen
  */
 
 return [
