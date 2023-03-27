@@ -56,12 +56,12 @@ class ProfileService extends AbstractService {
             $service = PermissionService::newInstance();
             
             $deleted = $service->all([
-                    'profile_id' => $model->id,
-                    'resource' => ['notIn' => array_keys($data['permissions'])]
+                    ['profile_id', $model->id],
+                    ['resource', 'in', array_keys($data['permissions']) ]
                 ], 
                 ['id']
             );
-                       
+                           
             if(!empty($deleted)){
                 
                 foreach($deleted as $row){
@@ -71,8 +71,8 @@ class ProfileService extends AbstractService {
             }
             
             $saved = array_column($service->all([
-                    'profile_id' => $model->profile_id,
-                    'resource' => ['in' => array_keys($data['permissions'])]
+                    ['profile_id', $model->profile_id],
+                    ['resource', 'in', array_keys($data['permissions'])]
                 ], 
                 ['resource', 'id']
             ), 'id', 'resource');

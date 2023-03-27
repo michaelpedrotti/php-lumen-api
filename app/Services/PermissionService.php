@@ -11,15 +11,21 @@ class PermissionService extends AbstractService {
         return Model::query()->paginate(perPage: 10);
     }
     
-    public function all($filter = [], $columns = ['*']): array {
+    public function all($where = [], $columns = ['*']): array {
         
-        $query = $this->_filter($filter, Model::query());
+        $query = Model::query();
         
-        print_r($query->getBindings());
-        print_r($query->toSql());
-       
+        foreach($where as $key => $val){
+            
+            if(is_numeric($key) && is_array($val) && count($val) == 3 && in_array($val[1], ['in', 'notIn'])){
+                
+                $query->{$val[1] == 'in' ? 'whereIn' : 'whereNotIn'}($val[0], $val[2]);
+                                
+                unset($where[$key]);   
+            }
+        }
         
-        return $query->get($columns)->all();
+        return $query->where($where)->get($columns)->all();
     }
     
     public function find($id = 0): Model {
