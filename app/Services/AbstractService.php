@@ -7,6 +7,7 @@ abstract class AbstractService {
     
     /**
      * 
+     * 
      */
     protected function _query($where = [], Builder $query): array {
 
@@ -14,8 +15,11 @@ abstract class AbstractService {
             
             if(is_numeric($key) && is_array($val) && count($val) == 3 && in_array($val[1], ['in', 'notIn'])){
                 
-                $query->{$val[1] == 'in' ? 'whereIn' : 'whereNotIn'}($val[0], $val[2]);
-                                
+                if(!empty($val[2])){
+                
+                    $query->{$val[1] == 'in' ? 'whereIn' : 'whereNotIn'}($val[0], $val[2]);
+                }
+ 
                 unset($where[$key]);   
             }
         }

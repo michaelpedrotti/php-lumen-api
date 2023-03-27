@@ -57,7 +57,7 @@ class ProfileService extends AbstractService {
             
             $deleted = $service->all([
                     ['profile_id', $model->id],
-                    ['resource', 'in', array_keys($data['permissions']) ]
+                    ['resource', 'notIn', array_keys($data['permissions']) ]
                 ], 
                 ['id']
             );
