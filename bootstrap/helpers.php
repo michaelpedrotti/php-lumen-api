@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Laravel\Lumen\Routing\Router;
+
 /**
  * Replace Illuminate\Routing\Router::resource()
  * 
@@ -16,8 +19,10 @@
  */
 if(!function_exists('route_resource')){
     function route_resource(string $path = '', string $controller  = 'UserController'): void {
-
-        \Illuminate\Support\Facades\Route::group(['prefix' => '/' . $path, 'middleware' => 'auth'], function(\Laravel\Lumen\Routing\Router $router) use($path, $controller) {
+        
+        $attributes = ['prefix' => '/' . $path, 'middleware' => ['is_authenticated', 'is_authorized']];
+        
+        Route::group($attributes, function(Router $router) use($path, $controller) {
     
             $router->get('/', ['uses' => $controller .'@index', 'as' => $path.'.index']);
             $router->get('/new', ['uses' => $controller .'@create', 'as' => $path.'.create']);

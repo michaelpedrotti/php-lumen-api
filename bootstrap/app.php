@@ -31,7 +31,8 @@ $app->configure('app');
 // Register Middleware
 //--------------------------------------------------------------------------
  $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
+     'is_authenticated' => App\Http\Middleware\Authentication::class,
+     'is_authorized' => App\Http\Middleware\Authorization::class,
  ]);
 
 //--------------------------------------------------------------------------

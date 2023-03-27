@@ -11,7 +11,7 @@ return new class extends Migration {
         Schema::create('profile', function (Blueprint $table) {
            
             $table->id();
-            $table->string('name', 255);
+            $table->string('name', 255)->notNullable();
             
 //            $this->timestamp('createdAt', $precision)->nullable();
 //            $this->timestamp('updatedAt', $precision)->nullable();

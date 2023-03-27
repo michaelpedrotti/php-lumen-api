@@ -11,7 +11,7 @@ return new class extends Migration {
         Schema::create('permission', function (Blueprint $table) {
             $table->id();
             $table->integer('profile_id');
-            $table->string('resource');
+            $table->string('resource')->notNullable();
             $table->json('actions');
         });
         
