@@ -4,7 +4,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model {
     
-    protected string $table = 'profile';
+    protected $table = 'profile';
 
     protected $fillable = ['name'];
+    
+    public $timestamps = false;
 }

@@ -9,13 +9,13 @@ abstract class AbstractService {
         foreach($filter as $name => $value){
             
             if(is_array($value)){
+
+                $val = current($value);
                 
-                [$oper, $val] = $value;
-                
-                switch($oper) {
+                switch(key($value)) {
                     
                     case 'in': $query->whereIn($name, $val); break;
-                    case 'notIn': $query->whereNotIn($column, $values); break;
+                    case 'notIn': $query->whereNotIn($name, $value); break;
                 } 
             }
             else {
@@ -40,7 +40,7 @@ abstract class AbstractService {
     
     public function delete($id = 0){}
     
-    static public function newInstance(){
+    static public function newInstance(): static{
         return new static();
     }
 }

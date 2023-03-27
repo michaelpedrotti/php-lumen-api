@@ -11,11 +11,11 @@ class PermissionService extends AbstractService {
         return Model::query()->paginate(perPage: 10);
     }
     
-    public function all($filter = []): array {
+    public function all($filter = [], $columns = ['*']): array {
         
         $query = $this->_filter($filter, Model::query());
         
-        return $query->get()->all();
+        return $query->get($columns)->all();
     }
     
     public function find($id = 0): Model {

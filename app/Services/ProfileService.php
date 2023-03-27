@@ -4,7 +4,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use App\Models\Profile as Model;
 
-class UserService extends AbstractService {
+class ProfileService extends AbstractService {
     
     public function paginate($filter = []): Paginator {
 
@@ -37,8 +37,7 @@ class UserService extends AbstractService {
                 $service->create([
                     'resource' => $resource,
                     'actions' => $actions,
-                    'profile_id' => $model->id
-                    
+                    'profile_id' => $model->id  
                 ]);
             }
         }
@@ -56,8 +55,45 @@ class UserService extends AbstractService {
             
             $service = PermissionService::newInstance();
             
+            $deleted = $service->all([
+                    'profile_id' => $model->profile_id,
+                    'resource' => ['notIn' => array_keys($data['permissions'])]
+                ], 
+                ['id']
+            );
             
+            if(!empty($deleted)){
+                
+                foreach($deleted as $row){
+                    
+                    $service->delete($row['id']);
+                }
+            }
             
+            $saved = array_column($service->all([
+                    'profile_id' => $model->profile_id,
+                    'resource' => ['in' => array_keys($data['permissions'])]
+                ], 
+                ['resource', 'id']
+            ), 'id', 'resource');
+            
+            foreach($data['permissions'] as $resource => $actions) {
+                
+                if(Arr::has($saved, $resource)){
+                     
+                    $id = $saved[$resource];
+                     
+                    $service->update(['actions' => $actions], $id);  
+                 }
+                 else {
+                     
+                    $service->create([
+                        'resource' => $resource,
+                        'actions' => $actions,
+                        'profile_id' => $model->id  
+                    ]); 
+                }
+            }      
         }
         
         return $model;
