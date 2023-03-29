@@ -27,8 +27,8 @@ class PermissionService extends AbstractService {
         if(!$model){
             throw new \Exception('User was not found');
         }
-        
-        if(!$model->profile_id !== $profileId){
+
+        if($model->profile_id != $profileId){
             throw new \Exception('Permission not belongs to this permission');
         }
         

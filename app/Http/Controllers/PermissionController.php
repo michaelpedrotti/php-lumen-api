@@ -24,7 +24,9 @@ class PermissionController extends Controller {
         
         return $res->setData([
             'error' => false,
-            'forms' => (object)[]
+            'forms' => (object)[
+                'actions' => (array)config('authz.actions')
+            ]
         ]);
     }
     
@@ -33,6 +35,7 @@ class PermissionController extends Controller {
         $data = $this->validate($req, [
             'resource' => 'required',
             'actions' => 'required',
+            'profile_id' => 'required',
         ]);
                
         return $res->setData([
@@ -45,7 +48,9 @@ class PermissionController extends Controller {
         
         return $res->setData([
             'error' => false,
-            'forms' => (object)[],
+            'forms' => (object)[
+                'actions' => (array)config('authz.actions')
+            ],
             'data' => Service::newInstance()->find($req->route('id'), $req->route('profile_id'))
         ]);
     }
