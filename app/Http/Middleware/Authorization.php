@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Arr;
 use App\Services\AuthorizationService as Service;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
 class Authorization {
@@ -23,7 +24,7 @@ class Authorization {
         
         if(Service::newInstance()->hasPermission(Arr::get($current, '_resource', ''), Arr::get($current, '_action', ''), auth()->user()->getAuthIdentifier()) === false) {
             
-            return response()->json(['error' => true, 'message' => 'Forbidden'], 403);
+            throw new HttpException(403, 'Forbidden');
         }
         
         return $next($request);
