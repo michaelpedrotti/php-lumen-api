@@ -2,11 +2,12 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+//use Illuminate\Auth\Access\AuthorizationException;
+//use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Http\JsonResponse;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -17,10 +18,10 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        AuthorizationException::class,
-        HttpException::class,
-        ModelNotFoundException::class,
-        ValidationException::class,
+//        AuthorizationException::class,
+//        HttpException::class,
+//        ModelNotFoundException::class,
+//        ValidationException::class,
     ];
 
     /**
@@ -46,7 +47,34 @@ class Handler extends ExceptionHandler
      *
      * @throws \Throwable
      */
-    public function render($request, Throwable $exception) {
-        return parent::render($request, $exception);
+    public function render($request, Throwable $e) {
+//        return parent::render($request, $exception);
+        
+        $status = 500;
+        
+        $json = ['error' => true];
+        
+        if ($e instanceof ValidationException) {
+            
+            $json['fields'] = $e->errors();
+            $json['message'] = 'Check form fields';
+            $status = 400;
+        }
+        else {
+            
+            $json['message'] = $e->getMessage();
+            
+            if($e instanceof HttpException) {
+            
+                $status = $e->getStatusCode();
+            }            
+        }
+        
+        if(getenv('APP_DEBUG', false)) {
+
+           $json['trace'] = preg_split("/\\n/", $e->getTraceAsString()); 
+        }
+        
+        return new JsonResponse($json, $status);       
     }
 }
