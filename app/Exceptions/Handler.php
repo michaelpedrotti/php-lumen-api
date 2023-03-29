@@ -70,7 +70,7 @@ class Handler extends ExceptionHandler
             }            
         }
         
-        if(getenv('APP_DEBUG', false)) {
+        if(env('APP_DEBUG', false)) {
 
            $json['trace'] = preg_split("/\\n/", $e->getTraceAsString()); 
         }
